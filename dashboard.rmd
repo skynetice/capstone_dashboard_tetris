@@ -1,0 +1,163 @@
+---
+title: "MENCAIRNYA ES PADA KUTUB UTARA BUMI DAN IMPLIKASINYA TERHADAP KENAIKAN TINGGI AIR LAUT"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: row
+    vertical_layout: scroll
+    after_body: footer.html
+    theme: yeti
+runtime: shiny
+---
+<style>
+.section-chart-a {
+  background-color: #ff1100;
+}
+</style>
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(DT)
+
+
+luas_es = read_csv("clean_data/ice_extend_clean.csv")
+
+
+level_laut = read_csv("clean_data/slr_year_clean.csv")
+
+area_dampak =  read_csv("clean_data/slr_country_clean.csv")
+
+area_dampak <- area_dampak %>% arrange(desc(`1m_area`)) %>%
+                                .[,-1]
+
+
+  
+```
+
+Board1 
+-----------------------------------------------------------------------
+### Latar Belakang
+
+Isu mengenai pemanasan global, mencairnya es di kedua kutub bumi, serta perubahan ketinggian air laut seringkali kita dengar digaungkan oleh aktivis lingkungan.
+<br>
+Baru-baru ini terdapat sebuah artikel berita yang menjelaskan bahwa mencairnya es pada kutub utara bumi berada pada tingkat yang mengkhawatirkan. 
+<br> 
+Es pada kutub utara bumi disebutkan mencair lebih cepat dari dugaan para peneliti. bahkan disebutkan bahwa dalam kurun waktu 18 tahun terakhir kutub utara bumi kehilangan sepertiga dari volume es laut musim dingin yang dimilikinya.
+<br>
+<br>
+berangkat dari hal tersebut kita dapat mencoba membuat hipotesa tentang efek dari mencairnya es musim dingin yang masif pada kutub utara. perubahan volume es kutub bumi erat sekali kaitannya dengan isu ketinggian air laut sehingga memunculkan hipotesa bahwa perubahan masif yang terjadi pada es yang berada pada kutub utara bumi mengakibatkan perubahan yang signifikan pada ketinggian air laut bumi.
+
+
+Board {data-height=450}
+-----------------------------------------------------------------------
+
+### Grafik 1
+
+```{r}
+
+plot_es = plot_ly(luas_es, x = luas_es$Year, y = luas_es$March, name='Maret', type = 'scatter', mode = 'lines')
+plot_es =  plot_es %>% add_trace(y = luas_es$September, name = 'September', mode = 'lines') %>%
+          layout(title = 'Grafik Luas Es Pada Kutub Utara', plot_bgcolor = "#e5ecf6", xaxis = list(title = 'Tahun'), 
+         yaxis = list(title = 'Luas Es dalam Juta Mil kuadrat (Million Square Miles)'), legend = list(title=list(text='<b> Musim </b>')))
+
+
+plot_es
+
+```
+### Story1
+
+```{r}
+```
+
+Grafik disamping memaparkan data timeseries mengenai luas es yang berada pada kutub utara bumi.
+<br>
+<br>
+data yang disajikan merupakan data luas es pada puncak dua musim yang terjadi pada kutub utara bumi, yakni pada bulan Maret yang merupakan puncak musim dingin serta bulan September yang merupakan puncak musim panas pada kutub utara bumi.
+<br>
+data pada kedua waktu tersebut seringkali digunakan untuk melihat sekilas keadaan musim yang terjadi pada kutub utara bumi.
+<br>
+<br>
+dari grafik tersebut terlihat bahwa luas es yang berada pada kutub utara menunjukkan trend penurunan. terjadi penurunan pada luas es kutub utara terutama sejak memasuki abad ke-21 atau tepatnya setelah maret 2003. Hal ini sesuai dengan pernyataan dalam artikel yang menyebutkan bahwa sekitar 1/3 dari luas es musim dingin pad kutub utara telah menghilang dalam kurun waktu 18 tahun terakhir.
+<br>
+<br>
+<br>
+Lalu bagaimana dengan ketinggian air laut bumi ?
+<br>
+Seberapa besar dampak dari mencairnya es pada kutub utara bumi secara masif tersebut ?
+<br> Grafik dibawah merupakan data perubahan ketinggian air laut bumi relatif terhadap rata-rata ketinggian air laut bumi pada periode waktu 1993-2008.
+
+
+
+Board3
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+fit_laut = lm(sea_level_rise_average ~ Day, data = level_laut)
+
+plot_laut = plot_ly(level_laut, x = level_laut$Day, y = level_laut$sea_level_rise_average, name='Ketinggian air laut relatif', type = 'scatter', mode = 'lines')
+plot_laut=  plot_laut %>% add_trace(y = fitted(fit_laut), name = 'trendline', mode = 'lines') %>%
+            layout(title = 'ketinggian air laut bumi relatif terhadap rata-rata ketinggian air laut bumi pada periode waktu 1993-2008', plot_bgcolor = "#e5ecf6", xaxis = list(title = 'Tahun'), 
+         yaxis = list(title = 'Ketinggian Air Laut Dalam ( mm )'), legend = list(title=list(text='<b> Legenda </b>')))
+
+plot_laut
+
+```
+
+Board4 {data-height=400}
+-----------------------------------------------------------------------
+### Story 2
+Berdasarkan tabel diatas dapat diamati bahwa terjadi perubahan ketinggian air laut dalam kurang-lebih 1 abad terakhir. Trendline pada grafik jelas menunjuk ke arah positif dimana dalam hal ini berarti terjadi penaikan ketinggian air laut dari masa ke masa.
+<br>
+<br>
+Namun, penaikan ketinggian air laut secara luar biasa terjadi pada awal abad ke-21 tepatnya sejak tahun 2002/2003. Sejak saat itu grafik penaikan ketinggian air laut secara dramatis terus meningkat setiap tahunnya dalam skala yang belum pernah terjadi pada masa sebelumnya, bahkan terus berada diatas garis trendlinenya.
+<br>
+<br>
+kondisi ini ternyata sesuai dengan hipotesa yang telah kita buat sebelumnya, bahwa mencairnya es musim dingin secara masif yang terjadi di kutub utara pada 2 dekade terakhir ini mengakibatkan terjadinya kenaikan tinggi air laut secara signifikan.
+<br>
+<br>
+Lalu apa yang akan terjadi jika terjadi kenaikan tinggi air laut ?
+<br>
+Dalam jangka panjang kenaikan tinggi air laut tentu akan mengakibatkan berbagai munculnya berbagai masalah mulai dari ekosistem, geografi, hingga kondisi geopilitik. Secara sederhana meningkatnya ketinggian air laut tentu akan berakibat pada berkurangnya luas daratan yang berada diatas permukaan laut.
+<br>
+<br>
+Grafik dibawah merupakan salah satu contoh sederhana data proyeksi dampak kenaikan air laut setiap satuan meter terhadap area suatu negara. Indonesia berada pada urutan ke-empat dalam negara paling berdampak dimana jika terjadi kenaikan ketinggian air laut sebanyak 1m saja setidaknya terdapat 13 ribu kilometer persegi atau 0.73% dari total luas daratan yang akan berada dibawah permukaan laut.
+
+Board4 {data-height=450}
+-----------------------------------------------------------------------
+### Tabel Data
+
+```{r, fig.height=12}
+#a custom table container
+sketch = htmltools::withTags(table(
+  class = 'display',
+  thead(
+    tr(
+      th(colspan=5, ''),
+      th(colspan = 4, 'Area terdampak dalam Sq. KM'),
+      th(colspan = 5, 'Area terdampak dalam % keseluruhan')
+    ),
+    tr(
+      lapply(c("code","negara","luas wilayah (km)",'1m', '2m', '3m','4m','5m','1m', '2m', '3m','4m','5m'), th))
+  )
+))
+
+datatable(area_dampak, container = sketch, rownames = FALSE, filter='top',options = list(autoWidth = TRUE, scrollY = '450px', dom='t',ordering=F))
+
+```
+
+***
+
+Infografis dan dashboard disusun oleh : <br>
+M Rhayhan Akbar   <br>
+<br>
+sumber terkait : <br>
+[Berita](https://www.kompas.com/sains/read/2022/03/16/120500323/es-arktik-mencair-pada-tingkat-yang-mengkhawatirkan?page=all) <br>
+[Data kenaikan tinggi air laut](https://ourworldindata.org/grapher/sea-level-rise?country=~OWID_WRL)<br>
+[Data perubahan luas es di kutub utara](https://www.epa.gov/climate-indicators/climate-change-indicators-arctic-sea-ice)<br>
+[Data negara terdampak](https://datacatalog.worldbank.org/search/dataset/0041449)<br>
+
+
